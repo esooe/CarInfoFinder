@@ -3,7 +3,7 @@ name: Deploy to AWS Elastic Beanstalk
 on:
   push:
     branches:
-      - master  # Or 'master'
+      - master  # or 'main'
 
 jobs:
   deploy:
@@ -17,13 +17,13 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'  # or your version
+        dotnet-version: '8.0.x'
 
     - name: Build project
       run: dotnet publish ./CarInfoFinder.Api/CarInfoFinder.Api.csproj -c Release -o publish
 
-    - name: Zip deployment package
-      run:
+    - name: Copy Dockerfile and Zip deployment package
+      run: |
         cp ./CarInfoFinder.Api/Dockerfile ./publish/
         cd publish
         zip -r ../app.zip .
