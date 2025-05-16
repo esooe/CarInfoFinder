@@ -1,0 +1,40 @@
+name: Deploy to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - master  # Or 'master'
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'  # or your version
+
+    - name: Build project
+      run: dotnet publish ./CarInfoFinder.Api/CarInfoFinder.Api.csproj -c Release -o publish
+
+    - name: Zip deployment package
+      run: |
+        cp ./CarInfoFinder.Api/Dockerfile ./publish/
+        cd publish
+        zip -r ../app.zip .
+
+    - name: Deploy to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v21
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: CarInfoFinderApp
+        environment_name: CarInfoFinder-env
+        region: us-east-1
+        version_label: v-${{ github.run_number }}
+        deployment_package: app.zip
