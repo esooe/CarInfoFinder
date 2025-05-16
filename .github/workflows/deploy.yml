@@ -22,9 +22,16 @@ jobs:
     - name: Build project
       run: dotnet publish ./CarInfoFinder.Api/CarInfoFinder.Api.csproj -c Release -o publish
 
-    - name: Copy Dockerfile and Zip deployment package
+    - name: Create simplified Dockerfile in publish folder
       run: |
-        cp ./CarInfoFinder.Api/Dockerfile ./publish/
+        echo "FROM mcr.microsoft.com/dotnet/aspnet:8.0
+        WORKDIR /app
+        COPY . .
+        EXPOSE 8080
+        ENTRYPOINT [\"dotnet\", \"CarInfoFinder.Api.dll\"]" > ./publish/Dockerfile
+
+    - name: Zip deployment package
+      run: |
         cd publish
         zip -r ../app.zip .
 
