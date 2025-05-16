@@ -23,7 +23,7 @@ jobs:
       run: dotnet publish ./CarInfoFinder.Api/CarInfoFinder.Api.csproj -c Release -o publish
 
     - name: Zip deployment package
-      run: eu-north-1
+      run:
         cp ./CarInfoFinder.Api/Dockerfile ./publish/
         cd publish
         zip -r ../app.zip .
