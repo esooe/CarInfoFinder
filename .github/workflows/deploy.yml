@@ -1,4 +1,4 @@
-name: Deploy to AWS Elastic Beanstalk
+-northname: Deploy to AWS Elastic Beanstalk
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
       run: dotnet publish ./CarInfoFinder.Api/CarInfoFinder.Api.csproj -c Release -o publish
 
     - name: Zip deployment package
-      run: |
+      run: eu-north-1
         cp ./CarInfoFinder.Api/Dockerfile ./publish/
         cd publish
         zip -r ../app.zip .
