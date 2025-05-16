@@ -7,22 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<IVehicleService, VehicleService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Enable Swagger and Swagger UI in ALL environments (not just Development)
+app.UseSwagger();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarInfoFinder.Api v1");
+});
 
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
+// app.UseHttpsRedirection();
+// app.UseAuthorization();
 
 app.MapControllers();
 
